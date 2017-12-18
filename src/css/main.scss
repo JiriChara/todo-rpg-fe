@@ -1,0 +1,34 @@
+@import './variables';
+
+// Normalize CSS
+@import '~normalize.css';
+
+// Material Design Icons
+$mdi-font-path: '~mdi/fonts/';
+@import '~mdi/scss/materialdesignicons.scss';
+
+// Buefy/Bulma
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
+$primary: $theme-color-5;
+$primary-invert: findColorInvert($primary);
+$info: $theme-color-1;
+$info-invert: findColorInvert($info);
+$blue: $theme-color-1;
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
+
+@font-face {
+  font-family: 'Berkshire Swash';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Berkshire Swash Regular'), local('BerkshireSwash-Regular'),
+       url('./fonts/berkshire-swash-v6-latin-regular.woff2') format('woff2'),
+       url('./fonts/berkshire-swash-v6-latin-regular.woff') format('woff');
+}
+
+a, button {
+  &:focus, &:active, &:hover {
+    outline: 0;
+  }
+}
