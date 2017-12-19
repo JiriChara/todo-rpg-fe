@@ -88,6 +88,11 @@
       .navbar-menu {
         .navbar-start, .navbar-end {
           & > .navbar-item {
+            &:hover {
+              & > .icon {
+                color: $theme-color-4;
+              }
+            }
             &.is-active {
               color: $theme-color-3;
               & > .icon {
