@@ -25,8 +25,9 @@
           <router-link
             v-for="item in menu.left"
             :key="item.name"
+            v-if="isVisible(item)"
             :to="item.link"
-            :class="{ 'is-active': item.isActive(route) }"
+            :class="{ 'is-active': isActive(item.name, route) }"
             class="navbar-item">
             <b-icon :icon="item.icon"></b-icon>
             {{ item.title }}
@@ -34,13 +35,25 @@
         </div>
 
         <div class="navbar-end">
-          <router-link to="/" class="navbar-item">
-            <b-icon icon="bell-ring"></b-icon>
+          <router-link
+            v-for="item in menu.right"
+            :key="item.name"
+            v-if="isVisible(item)"
+            :to="item.link"
+            :class="{ 'is-active': isActive(item.name, route) }"
+            class="navbar-item">
+            <b-icon :icon="item.icon"></b-icon>
+            {{ item.title }}
           </router-link>
 
-          <router-link to="/" class="navbar-item">
-            <b-icon icon="account-settings-variant"></b-icon>
-          </router-link>
+          <a
+            v-if="$logout.isAllowed('logout')"
+            href="javascript:void(0);"
+            class="navbar-item"
+            @click="onLogout">
+            <b-icon icon="logout"></b-icon>
+            <span>Logout</span>
+          </a>
         </div>
       </div>
     </div>
@@ -48,7 +61,15 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex';
+  import router from '@/router';
+  import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
+  import {
+    inventoriesPerimeter,
+    loginPerimeter,
+    logoutPerimeter,
+    partiesPerimeter,
+    questsPerimeter,
+  } from '@/perimeters';
 
   export default {
     name: 'trpg-navbar',
@@ -59,15 +80,46 @@
         'isMobileMenuActive',
       ]),
 
+      ...mapGetters('navbar', [
+        'isActive',
+      ]),
+
       ...mapState([
         'route',
       ]),
     },
 
+    perimeters: [
+      inventoriesPerimeter,
+      loginPerimeter,
+      logoutPerimeter,
+      partiesPerimeter,
+      questsPerimeter,
+    ],
+
     methods: {
       ...mapMutations('navbar', [
         'toggleMobileMenu',
       ]),
+
+      ...mapActions('me', [
+        'logout',
+      ]),
+
+      isVisible(item) {
+        return this[`$${item.permissions.name}`].isAllowed(item.permissions.action);
+      },
+
+      async onLogout() {
+        await this.logout();
+
+        router.push({ name: 'home' });
+
+        this.$snackbar.open({
+          message: 'Successfully logged out',
+          type: 'is-success',
+        });
+      },
     },
   };
 </script>

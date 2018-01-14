@@ -2,7 +2,10 @@
   <div id="app">
     <trpg-navbar></trpg-navbar>
 
-    <router-view/>
+    <main>
+      <router-view/>
+      <vue-progress-bar></vue-progress-bar>
+    </main>
   </div>
 </template>
 
@@ -11,8 +14,25 @@
 
   export default {
     name: 'app',
+
     components: {
       TrpgNavbar,
+    },
+
+    created() {
+      this.$router.beforeEach((to, from, next) => {
+        this.$Progress.start();
+
+        next();
+      });
+
+      this.$router.afterEach(() => {
+        this.$Progress.finish();
+      });
+    },
+
+    mounted() {
+      this.$Progress.finish();
     },
   };
 </script>

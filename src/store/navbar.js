@@ -12,8 +12,9 @@ export default {
             name: 'quests',
           },
           icon: 'sword-cross',
-          isActive(route) {
-            return route.name === 'quests';
+          permissions: {
+            name: 'quests',
+            action: 'viewList',
           },
         },
 
@@ -24,8 +25,9 @@ export default {
             name: 'inventory',
           },
           icon: 'sword',
-          isActive(route) {
-            return route.name === 'inventory';
+          permissions: {
+            name: 'inventories',
+            action: 'viewSingle',
           },
         },
 
@@ -36,13 +38,27 @@ export default {
             name: 'party',
           },
           icon: 'account-multiple',
-          isActive(route) {
-            return route.name === 'party';
+          permissions: {
+            name: 'parties',
+            action: 'viewSingle',
           },
         },
       ],
 
-      right: [],
+      right: [
+        {
+          name: 'login',
+          title: 'Login',
+          link: {
+            name: 'login',
+          },
+          icon: 'login',
+          permissions: {
+            name: 'login',
+            action: 'login',
+          },
+        },
+      ],
     },
   },
 
@@ -70,6 +86,10 @@ export default {
     getNavItem(state) {
       return name => state.menu.left.find(i => i.name === name) ||
         state.menu.right.find(i => i.name === name);
+    },
+
+    isActive(state, getters) {
+      return (name, route) => getters.getNavItem(name).name === route.name;
     },
   },
 };
